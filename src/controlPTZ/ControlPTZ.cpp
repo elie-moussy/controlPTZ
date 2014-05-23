@@ -1,4 +1,6 @@
-#include "ControlPTZ.h"
+#include "controlPTZ/ControlPTZ.h"
+
+using namespace std;
 
 ControlPTZ::ControlPTZ()
 {
