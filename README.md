@@ -22,7 +22,7 @@ be deleted to reconfigure a package from scratch.
 
 ### Dependencies
 
-The calibration depends on several packages which
+This package depends on several others which
 have to be available on your machine.
 
  - Libraries:
