@@ -8,8 +8,8 @@
 # (at your option) any later version.
 
 SET(NEWHEADERS
-	controlPTZ/ControlPTZ.h
-	controlPTZ/StreamRTSP.h)
+	controlPTZ/ControlPTZ.hh
+	controlPTZ/StreamRTSP.hh)
 
 INSTALL(FILES ${NEWHEADERS}
 	DESTINATION include/controlPTZ

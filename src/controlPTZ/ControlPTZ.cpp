@@ -1,4 +1,4 @@
-#include "controlPTZ/ControlPTZ.h"
+#include "controlPTZ/ControlPTZ.hh"
 
 using namespace std;
 ///\class ControlPTZ ControlPTZ.h "controlPTZ/ControlPTZ.h"
