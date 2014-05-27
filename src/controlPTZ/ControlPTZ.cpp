@@ -136,6 +136,55 @@ void ControlPTZ::HTTPRequestPTZPosAbsolute(float pan, float tilt, float zoom, in
     }
 }
 
+void ControlPTZ::refreshPosition(double &pan, double &tilt, int &zoom, int cam)
+{
+	char buf[1235];
+	const int port = 80;
+	struct sockaddr_in sock_host;
+	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	const char *queryposition = "GET /axis-cgi/com/ptz.cgi?query=position HTTP/1.1\n\n";
+	
+	// Création de l'adresse de la machine distante
+	memset(& sock_host, '\0', sizeof(sock_host));
+	sock_host.sin_family = AF_INET;
+	sock_host.sin_port = htons(port);
+	if (cam == 1)
+		inet_aton("192.168.31.7", & sock_host.sin_addr);
+	else if (cam == 2)
+		inet_aton("192.168.31.8", & sock_host.sin_addr);
+	else
+		return;
+	
+	// Connexion sur l'adresse distante
+	connect(sock, (struct sockaddr *) & sock_host, sizeof(sock_host));
+	
+	// Envoie du message sur le serveur
+	if(write(sock, queryposition, strlen(queryposition)) == -1)
+	{
+		std::cout << "Error in writing on the server" << std::endl;
+		return;
+	}
+	usleep(1000); // 100 ms
+	if(read(sock,buf,1234) == -1)
+	{
+		std::cout << "Error in reading from the server" << std::endl;
+		return;
+	}
+	close(sock);
+	
+	// Récupération des données
+	int l,z;
+	float p,t;
+	char autofocus[3], autoiris[3];
+	
+	sscanf(buf, "HTTP/1.0 200 OK\nContent-Type: text/plain\nContent-Length: %d\n\npan=%f\ntilt=%f\nzoom=%d\nautofocus=%s\nautoiris=%s\n", 
+	&l, &p, &t, &z, autofocus, autoiris);
+
+	pan = p;
+	tilt = t;
+	zoom = z;
+}
+
 ///\sa void ControlPTZ::HTTPRequestSetAutoFocus(bool b);
 ///\brief This function of the class "ControlPTZ" will allow both cameras to activate/deactivate the auto focus.
 ///\param b Input value. If it is true, the auto focus will be activated. Otherwise, it will be deactivated.

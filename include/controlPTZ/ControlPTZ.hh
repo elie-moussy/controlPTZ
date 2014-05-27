@@ -1,6 +1,15 @@
 #ifndef CONTROLPTZ_H
 #define CONTROLPTZ_H
 
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <string.h>
+#include <unistd.h>
+#include <assert.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
 #include <iostream>
 #include <curl/curl.h>
 #include <string>
@@ -26,7 +35,8 @@ class ControlPTZ
   void HTTPRequestSetIRCutFilter(bool b);
   // Set auto back light compensation
   void HTTPRequestSetAutoBackLight(bool b);
-  
+  // Get pan, tilt and zoom from the camera
+  void refreshPosition(double &pan, double &tilt, int &zoom, int cam=1);
  private :
   CURL *handle;
 };
